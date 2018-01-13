@@ -1,4 +1,4 @@
-# github-twitter-bot
+# Twitgit.py
 
 ## Todo
 * Move secrets to env

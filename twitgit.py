@@ -13,7 +13,7 @@ app.config['CONSUMER_TOKEN'] = 'FakeConsumerToken'
 app.config['CONSUMER_SECRET'] = 'FakeConsumerSecret'
 app.config['ACCESS_TOKEN'] = 'FakeAccessToken'
 app.config['ACCESS_TOKEN_SECRET'] = 'FakeAccessSecret'
-app.config['GITHUB_SECRET'] = 'FakeGitHubSecret'
+app.config['GITHUB_SECRET'] = 'f53904ec713350e5a9faa550d146f46ea54af492' # This is a temporary key and no longer valid
 
 # Setup twitter
 #auth = tweepy.OAuthHandler(app.config['CONSUMER_TOKEN'], app.config['CONSUMER_SECRET'])
@@ -23,7 +23,8 @@ app.config['GITHUB_SECRET'] = 'FakeGitHubSecret'
 
 @app.route('/', methods=['POST'])
 def github_update():
-
+    print("Github hashed {}".format((request.headers.get('HTTP_X_HUB_SIGNATURE'))))
+    #x = HMAC.new(,app.config['GITHUB_SECRET'], )
     print(request.remote_addr)
     print(request.remote_user)
     return "OK"

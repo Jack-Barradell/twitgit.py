@@ -2,6 +2,8 @@
 
 from flask import Flask, request, abort
 import tweepy
+import logging
+import json
 from Crypto.Hash import SHA, HMAC
 
 
@@ -26,16 +28,22 @@ app.config['VERIFY_GITHUB'] = True
 
 @app.route('/', methods=['POST'])
 def github_update():
-    github_mac = request.headers.get('HTTP_X_HUB_SIGNATURE')
-    sig = "sha1=" + HMAC.new(app.config['GITHUB_SECRET'], request.data, SHA).hexdigest()
-    print("Github hashed {}".format(github_mac))
-    print("Calced sig {}".format(sig))
-    if sig != github_mac:
-        abort(403)
+    logging.debug('Received request from {}'.format(request.remote_addr))
+    if app.config['VERIFY_GITHUB']:
+        github_mac = request.headers.get('HTTP_X_HUB_SIGNATURE')
+        sig = "sha1=" + HMAC.new(app.config['GITHUB_SECRET'], request.data, SHA).hexdigest()
+        print("Github hashed {}".format(github_mac))
+        print("Calced sig {}".format(sig))
+        if sig != github_mac:
+            abort(403)
+        # Debug message
+        print("\n ######################################### \n")
+        print("Github verified")
+        print("\n ######################################### \n")
 
-    # Debug message
-    print("\n ######################################### \n")
-    print("Github verified")
-    print("\n ######################################### \n")
+    request_details = json.load(request.get_json(force=True))
+    print("request details are {}".format(request_details))
+
+
     return "OK"
 

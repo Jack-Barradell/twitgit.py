@@ -31,10 +31,10 @@ def github_update():
     logging.debug('Received request from {}'.format(request.remote_addr))
     if app.config['VERIFY_GITHUB']:
         github_mac = request.headers.get('HTTP_X_HUB_SIGNATURE')
-        sig = "sha1=" + HMAC.new(app.config['GITHUB_SECRET'], request.data, SHA).hexdigest()
+        sig = "sha1={}".format(HMAC.new(app.config['GITHUB_SECRET'], request.data, SHA).hexdigest())
         print("Github hashed {}".format(github_mac))
         print("Calced sig {}".format(sig))
-        if sig != github_mac:
+        if not sig == github_mac:
             abort(403)
         # Debug message
         print("\n ######################################### \n")

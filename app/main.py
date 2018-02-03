@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 from flask import Flask, request, abort
 import tweepy
 import logging
@@ -26,8 +24,13 @@ app.config['VERIFY_GITHUB'] = True
 # api = tweepy.api(auth)
 
 
+@app.route('/', methods=['GET'])
+def index_page():
+    return "Twitgit is live!"
+
+
 @app.route('/', methods=['POST'])
-def github_update():
+def receive_post():
     logging.debug('Received request from {}'.format(request.remote_addr))
     if app.config['VERIFY_GITHUB']:
         github_mac = request.headers.get('HTTP_X_HUB_SIGNATURE')
@@ -44,6 +47,10 @@ def github_update():
     request_details = json.load(request.get_json(force=True))
     print("request details are {}".format(request_details))
 
-
     return "OK"
+
+
+if __name__ == '__main__':
+    # Debug mode
+    app.run(host='0.0.0.0', debug=True, port=80)
 

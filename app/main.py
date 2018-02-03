@@ -33,8 +33,8 @@ def index_page():
 def receive_post():
     logging.debug('Received request from {}'.format(request.remote_addr))
     if app.config['VERIFY_GITHUB']:
-        github_mac = request.headers.get('HTTP_X_HUB_SIGNATURE')
-        sig = "sha1={}".format(HMAC.new(app.config['GITHUB_SECRET'], request.data, SHA).hexdigest())
+        github_mac = request.headers.get('X-HUB-SIGNATURE')
+        sig = "sha1={}".format(HMAC.new(app.config['GITHUB_SECRET'].encode('utf-8'), request.get_data(), SHA).hexdigest())
         print("Github hashed {}".format(github_mac))
         print("Calced sig {}".format(sig))
         if not sig == github_mac:
@@ -44,7 +44,7 @@ def receive_post():
         print("Github verified")
         print("\n ######################################### \n")
 
-    request_details = json.load(request.get_json(force=True))
+    request_details = json.loads(request.get_json(force=True))
     print("request details are {}".format(request_details))
 
     return "OK"

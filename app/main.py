@@ -44,10 +44,10 @@ def receive_post():
         print("Github verified")
         print("\n ######################################### \n")
 
-    request_details = json.loads(request.get_json(force=True))
+    request_details = request.get_json(force=True)
     print("request details are {}".format(request_details))
 
-    return "OK"
+    return "OK", 200
 
 
 if __name__ == '__main__':

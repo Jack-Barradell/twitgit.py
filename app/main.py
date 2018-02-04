@@ -10,14 +10,14 @@ from Crypto.Hash import SHA, HMAC
 app = Flask(__name__)
 
 # Twitter config
-app.config['CONSUMER_TOKEN'] = os.environ.get['CONSUMER_TOKEN']
-app.config['CONSUMER_SECRET'] = os.environ.get['CONSUMER_SECRET']
-app.config['ACCESS_TOKEN'] = os.environ.get['ACCESS_TOKEN']
-app.config['ACCESS_TOKEN_SECRET'] = os.environ.get['ACCESS_TOKEN_SECRET']
+app.config['CONSUMER_TOKEN'] = os.environ.get('CONSUMER_TOKEN')
+app.config['CONSUMER_SECRET'] = os.environ.get('CONSUMER_SECRET')
+app.config['ACCESS_TOKEN'] = os.environ.get('ACCESS_TOKEN')
+app.config['ACCESS_TOKEN_SECRET'] = os.environ.get('ACCESS_TOKEN_SECRET')
 app.config['MAX_TWEET_LENGTH'] = 280
 
 # Github Config
-app.config['GITHUB_SECRET'] = os.environ.get['GITHUB_SECRET']
+app.config['GITHUB_SECRET'] = os.environ.get('GITHUB_SECRET')
 app.config['VERIFY_GITHUB'] = True
 
 # Setup twitter

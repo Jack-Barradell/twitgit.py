@@ -3,20 +3,21 @@ import tweepy
 import logging
 import textwrap
 import time
+import os
 from Crypto.Hash import SHA, HMAC
 
 
 app = Flask(__name__)
 
 # Twitter config
-app.config['CONSUMER_TOKEN'] = 'FhfY3KQyQq1miyCS0sQFm8z6S' # This is a temporary key and no longer valid
-app.config['CONSUMER_SECRET'] = 'eqOSYx1Q8UAsk0G2FVEX4QBQdhH4Ujb10nNT3zUv4CoTqvGABI' # This is a temporary key and no longer valid
-app.config['ACCESS_TOKEN'] = '1551044965-P1FWKcMniCfDnxQaVBi4hnCsm01KM9laMRG00LS' # This is a temporary key and no longer valid
-app.config['ACCESS_TOKEN_SECRET'] = 'FTBtzcoTGWJBiW9R0ocMOUxrNyvfLOeMxIIFcUy2HwBGk' # This is a temporary key and no longer valid
+app.config['CONSUMER_TOKEN'] = os.environ.get['CONSUMER_TOKEN']
+app.config['CONSUMER_SECRET'] = os.environ.get['CONSUMER_SECRET']
+app.config['ACCESS_TOKEN'] = os.environ.get['ACCESS_TOKEN']
+app.config['ACCESS_TOKEN_SECRET'] = os.environ.get['ACCESS_TOKEN_SECRET']
 app.config['MAX_TWEET_LENGTH'] = 280
 
 # Github Config
-app.config['GITHUB_SECRET'] = 'f53904ec713350e5a9faa550d146f46ea54af492'  # This is a temporary key and no longer valid
+app.config['GITHUB_SECRET'] = os.environ.get['GITHUB_SECRET']
 app.config['VERIFY_GITHUB'] = True
 
 # Setup twitter

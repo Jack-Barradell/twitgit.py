@@ -9,11 +9,10 @@ from Crypto.Hash import SHA, HMAC
 app = Flask(__name__)
 
 # Twitter config
-app.config['PERMITTED_HOOKS'] = ['127.0.0.1']
-app.config['CONSUMER_TOKEN'] = 'FhfY3KQyQq1miyCS0sQFm8z6S'
-app.config['CONSUMER_SECRET'] = 'eqOSYx1Q8UAsk0G2FVEX4QBQdhH4Ujb10nNT3zUv4CoTqvGABI'
-app.config['ACCESS_TOKEN'] = '1551044965-P1FWKcMniCfDnxQaVBi4hnCsm01KM9laMRG00LS'
-app.config['ACCESS_TOKEN_SECRET'] = 'FTBtzcoTGWJBiW9R0ocMOUxrNyvfLOeMxIIFcUy2HwBGk'
+app.config['CONSUMER_TOKEN'] = 'FhfY3KQyQq1miyCS0sQFm8z6S' # This is a temporary key and no longer valid
+app.config['CONSUMER_SECRET'] = 'eqOSYx1Q8UAsk0G2FVEX4QBQdhH4Ujb10nNT3zUv4CoTqvGABI' # This is a temporary key and no longer valid
+app.config['ACCESS_TOKEN'] = '1551044965-P1FWKcMniCfDnxQaVBi4hnCsm01KM9laMRG00LS' # This is a temporary key and no longer valid
+app.config['ACCESS_TOKEN_SECRET'] = 'FTBtzcoTGWJBiW9R0ocMOUxrNyvfLOeMxIIFcUy2HwBGk' # This is a temporary key and no longer valid
 app.config['MAX_TWEET_LENGTH'] = 280
 
 # Github Config
@@ -37,20 +36,10 @@ def receive_post():
     if app.config['VERIFY_GITHUB']:
         github_mac = request.headers.get('X-HUB-SIGNATURE')
         sig = "sha1={}".format(HMAC.new(app.config['GITHUB_SECRET'].encode('utf-8'), request.get_data(), SHA).hexdigest())
-        print("Github hashed {}".format(github_mac))
-        print("Calced sig {}".format(sig))
         if not sig == github_mac:
             abort(403)
-        # Debug message
-        print("\n ######################################### \n")
-        print("Github verified")
-        print("\n ######################################### \n")
 
     request_details = request.get_json(force=True)
-    #print("request details are {}".format(request_details))
-    #json_data = json.loads(request_details)[0]
-    print("\n \n")
-    #print("commits {}".format(request_details['commits']))
     commit_list = request_details['commits']
     tweets = []
     for commit in commit_list:
@@ -62,13 +51,11 @@ def receive_post():
             tweets.append(tweet)
 
     for tweet in tweets:
-        print(tweet + '\n\n\n')
         try:
             api.update_status(tweet)
         except tweepy.RateLimitError:
             limit_hit = True
             while limit_hit:
-                print("Rate limit hit sleeping 60 seconds then trying again")
                 time.sleep(60)
                 try:
                     api.update_status(tweet)
@@ -76,8 +63,6 @@ def receive_post():
                     break
                 except tweepy.RateLimitError:
                     continue
-
-
     return "OK", 200
 
 

@@ -10,10 +10,10 @@ app = Flask(__name__)
 
 # Twitter config
 app.config['PERMITTED_HOOKS'] = ['127.0.0.1']
-app.config['CONSUMER_TOKEN'] = 'FakeConsumerToken'
-app.config['CONSUMER_SECRET'] = 'FakeConsumerSecret'
-app.config['ACCESS_TOKEN'] = 'FakeAccessToken'
-app.config['ACCESS_TOKEN_SECRET'] = 'FakeAccessSecret'
+app.config['CONSUMER_TOKEN'] = 'FhfY3KQyQq1miyCS0sQFm8z6S'
+app.config['CONSUMER_SECRET'] = 'eqOSYx1Q8UAsk0G2FVEX4QBQdhH4Ujb10nNT3zUv4CoTqvGABI'
+app.config['ACCESS_TOKEN'] = '1551044965-P1FWKcMniCfDnxQaVBi4hnCsm01KM9laMRG00LS'
+app.config['ACCESS_TOKEN_SECRET'] = 'FTBtzcoTGWJBiW9R0ocMOUxrNyvfLOeMxIIFcUy2HwBGk'
 app.config['MAX_TWEET_LENGTH'] = 280
 
 # Github Config
@@ -21,9 +21,9 @@ app.config['GITHUB_SECRET'] = 'f53904ec713350e5a9faa550d146f46ea54af492'  # This
 app.config['VERIFY_GITHUB'] = True
 
 # Setup twitter
-# auth = tweepy.OAuthHandler(app.config['CONSUMER_TOKEN'], app.config['CONSUMER_SECRET'])
-# auth.set_access_token(app.config['ACCESS_TOKEN,'], app.config['ACCESS_TOKEN_SECRET'])
-# api = tweepy.api(auth)
+auth = tweepy.OAuthHandler(app.config['CONSUMER_TOKEN'], app.config['CONSUMER_SECRET'])
+auth.set_access_token(app.config['ACCESS_TOKEN'], app.config['ACCESS_TOKEN_SECRET'])
+api = tweepy.API(auth)
 
 
 @app.route('/', methods=['GET'])
@@ -54,16 +54,16 @@ def receive_post():
     commit_list = request_details['commits']
     tweets = []
     for commit in commit_list:
-        if len(commit['message']) + 24 > app.config['MAX_TWEET_LENGTH']:
-            print("msg needs trimming")
-            tweet = '{}...\n{}'.format(textwrap.shorten(commit['message'], width=app.config['MAX_TWEET_LENGTH']-27, placeholder='...'), commit['url'])
+        if len(commit['message']) + 32 > app.config['MAX_TWEET_LENGTH']:
+            tweet = 'Commit:\n{}\n{}'.format(textwrap.shorten(commit['message'], width=app.config['MAX_TWEET_LENGTH']-32, placeholder='...'), commit['url'])
             tweets.append(tweet)
         else:
-            print("Tweet dat boi")
-            tweet = '{}\n{}'.format(commit['message'], commit['url'])
+            tweet = 'Commit:\n{}\n{}'.format(commit['message'], commit['url'])
             tweets.append(tweet)
-            print("Tweet :\n{}".format(tweet))
 
+    for tweet in tweets:
+        print(tweet + '\n\n\n')
+        api.update_status(tweet)
 
     return "OK", 200
 

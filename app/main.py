@@ -2,6 +2,7 @@ from flask import Flask, request, abort
 import tweepy
 import logging
 import textwrap
+import time
 from Crypto.Hash import SHA, HMAC
 
 
@@ -62,7 +63,20 @@ def receive_post():
 
     for tweet in tweets:
         print(tweet + '\n\n\n')
-        api.update_status(tweet)
+        try:
+            api.update_status(tweet)
+        except tweepy.RateLimitError:
+            limit_hit = True
+            while limit_hit:
+                print("Rate limit hit sleeping 60 seconds then trying again")
+                time.sleep(60)
+                try:
+                    api.update_status(tweet)
+                    limit_hit = False
+                    break
+                except tweepy.RateLimitError:
+                    continue
+
 
     return "OK", 200
 

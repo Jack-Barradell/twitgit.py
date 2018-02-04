@@ -2,6 +2,7 @@ from flask import Flask, request, abort
 import tweepy
 import logging
 import json
+import textwrap
 from Crypto.Hash import SHA, HMAC
 
 
@@ -13,6 +14,7 @@ app.config['CONSUMER_TOKEN'] = 'FakeConsumerToken'
 app.config['CONSUMER_SECRET'] = 'FakeConsumerSecret'
 app.config['ACCESS_TOKEN'] = 'FakeAccessToken'
 app.config['ACCESS_TOKEN_SECRET'] = 'FakeAccessSecret'
+app.config['MAX_TWEET_LENGTH'] = 280
 
 # Github Config
 app.config['GITHUB_SECRET'] = 'f53904ec713350e5a9faa550d146f46ea54af492'  # This is a temporary key and no longer valid
@@ -45,7 +47,23 @@ def receive_post():
         print("\n ######################################### \n")
 
     request_details = request.get_json(force=True)
-    print("request details are {}".format(request_details))
+    #print("request details are {}".format(request_details))
+    #json_data = json.loads(request_details)[0]
+    print("\n \n")
+    #print("commits {}".format(request_details['commits']))
+    commit_list = request_details['commits']
+    tweets = []
+    for commit in commit_list:
+        if len(commit['message']) + 24 > app.config['MAX_TWEET_LENGTH']:
+            print("msg needs trimming")
+            tweet = '{}...\n{}'.format(textwrap.shorten(commit['message'], width=app.config['MAX_TWEET_LENGTH']-27, placeholder='...'), commit['url'])
+            tweets.append(tweet)
+        else:
+            print("Tweet dat boi")
+            tweet = '{}\n{}'.format(commit['message'], commit['url'])
+            tweets.append(tweet)
+            print("Tweet :\n{}".format(tweet))
+
 
     return "OK", 200
 

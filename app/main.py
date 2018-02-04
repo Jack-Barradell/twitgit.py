@@ -1,7 +1,6 @@
 from flask import Flask, request, abort
 import tweepy
 import logging
-import json
 import textwrap
 from Crypto.Hash import SHA, HMAC
 

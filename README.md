@@ -19,4 +19,7 @@ Automatically tweet your commit messages!
 ## Todo
 * Upload docker image to docker hub
 * Better instructions 
+* Unit tests
+* Support for other github webhooks
+* Better GET route to explain what it is
 

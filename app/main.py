@@ -66,8 +66,11 @@ def receive_post():
                     api.update_status(tweet)
                     limit_hit = False
                     break
-                except tweepy.RateLimitError:
+                except tweepy.TweepError:
                     continue
+
+        except tweepy.TweepError:
+            continue
     return "OK", 200
 
 

@@ -37,7 +37,9 @@ def receive_post():
     if app.config['VERIFY_GITHUB']:
         github_mac = request.headers.get('X-HUB-SIGNATURE')
         sig = "sha1={}".format(HMAC.new(app.config['GITHUB_SECRET'].encode('utf-8'), request.get_data(), SHA).hexdigest())
+        logging.debug('Comparing github mac {} to calculated sig {}'.format(github_mac, sig))
         if not sig == github_mac:
+            logging.warning('Calculated sig and github mac do not match, fake data may have been sent.')
             abort(403)
 
     request_details = request.get_json(force=True)
@@ -54,8 +56,10 @@ def receive_post():
     for tweet in tweets:
         try:
             api.update_status(tweet)
+            logging.debug('Tweeting: {}'.format(tweet))
         except tweepy.RateLimitError:
             limit_hit = True
+            logging.warning('Rate limit hit')
             while limit_hit:
                 time.sleep(60)
                 try:
